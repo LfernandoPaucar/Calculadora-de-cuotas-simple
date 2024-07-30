@@ -72,8 +72,6 @@ switch(tasaAnual){
         console.log("La tasa correspondiente a su monto es 3.5%");
     case 2.5:
         console.log("La tasa correspondiente a su monto es 2.5%");
-    default:
-        console.error("Error al ingresar la tasa")
 }
 
 
@@ -81,4 +79,10 @@ const tasaMensual = (tasaAnual / 100) / 12;
 
 const calcularCuota = (a, b, c) => (a * b) / (1 - Math.pow((1 + b), -c))
 
-console.log("Su cuota a pagar mensual es: " + calcularCuota(monto, tasaMensual, plazo))
+console.log("Su cuota a pagar mensual es de: " + calcularCuota(monto, tasaMensual, plazo))
+
+let cuotaPagar = calcularCuota(monto, tasaMensual, plazo);
+
+const totalInteres = (a, b, c) => ((c * b) - a);
+
+console.log("El interes total a pagar es de: " + totalInteres(monto, plazo, cuotaPagar))
