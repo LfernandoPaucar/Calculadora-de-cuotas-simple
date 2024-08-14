@@ -1,4 +1,4 @@
-// Calculadora de cuotas mensuales de creditos no mayores a s/5000.
+// Calculadora de cuotas mensuales de creditos no mayores a $5000.
 
 
 class Credito{
