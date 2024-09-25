@@ -4,29 +4,62 @@ const nombreUsuario = document.querySelector('#nombres');
 const apellidoUsuario = document.querySelector('#apellidos');
 const correoUsuario = document.querySelector('#correo');
 const identificacionUsuario = document.querySelector('#DNI');
+const calculadora = document.querySelector('#calculadora');
+const montoUsuario = document.querySelector('#monto');
+const aniosUsuario = document.querySelector('#anios');
+const periodoUsuario = document.querySelector('#periodo');
 
+// Al enviar el formulario, almacenar datos y enviarlos mediante fetch
 formulario.addEventListener("submit", (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
 
-    // Almacenar datos del usuario en localStorage
-    const nameStorage = nombreUsuario.value.trim();
-    const lastnameStorage = apellidoUsuario.value.trim();
-    const emailStorage = correoUsuario.value.trim();
-    const dniStorage = identificacionUsuario.value.trim();
+    // Almacenar datos del usuario
+    const datosUsuario = {
+        nombre: nombreUsuario.value.trim(),
+        apellidos: apellidoUsuario.value.trim(),
+        email: correoUsuario.value.trim(),
+        dni: identificacionUsuario.value.trim()
+    };
 
-    localStorage.setItem("Nombre", nameStorage);
-    localStorage.setItem("Apellidos", lastnameStorage);
-    localStorage.setItem("Email", emailStorage);
-    localStorage.setItem("Dni", dniStorage);
+    // Validar los campos antes de enviarlos
+    if (!datosUsuario.nombre || !datosUsuario.apellidos || !datosUsuario.email || !datosUsuario.dni) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Todos los campos son obligatorios.",
+        });
+        return;
+    }
 
-    // Mostrar la calculadora y ocultar el formulario
-    calculadora.style.display = 'flex';
-    formulario.style.display = 'none';
+    // Enviar los datos al servidor mediante fetch
+    fetch('http://localhost:3000/usuarios', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(datosUsuario)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Mostrar la calculadora y ocultar el formulario solo si los datos se envían correctamente
+        console.log('Datos guardados en el servidor:', data);
+        calculadora.style.display = 'block';   // Mostrar la calculadora
+        formulario.style.display = 'none';     // Ocultar el formulario
+    })
+    .catch(error => {
+        console.error('Error al enviar datos:', error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "No se pudo enviar la información",
+        });
+    });
 });
-
-let montoUsuario = document.querySelector('#monto');
-let aniosUsuario = document.querySelector('#anios');
-let periodoUsuario = document.querySelector('#periodo');
 
 // Función para asignar la tasa de interés anual
 function asignarTasaAnual(monto) {
@@ -37,26 +70,32 @@ function asignarTasaAnual(monto) {
     } else if (monto > 3000 && monto <= 5000) {
         return 0.025 / 12;
     } else {
-        alert("Servicio interrumpido");
+        Swal.fire({
+            icon: "error",
+            title: "Monto fuera de rango",
+            text: "El monto no puede exceder los $5000",
+        });
         return null;
     }
 }
 
 // Función para determinar la frecuencia de pagos
 function frecuencia(periodo) {
-    if (periodo === "mensual") {
-        return 12;
-    } else if (periodo === "bimestral") {
-        return 6;
-    } else if (periodo === "trimestral") {
-        return 4;
-    } else if (periodo === "semestral") {
-        return 2;
-    } else {
-        return 1; // El periodo por defecto es anual
+    switch (periodo) {
+        case "mensual":
+            return 12;
+        case "bimestral":
+            return 6;
+        case "trimestral":
+            return 4;
+        case "semestral":
+            return 2;
+        default:
+            return 1; // El periodo por defecto es anual
     }
 }
 
+// Clase Credito
 class Credito {
     constructor(monto, plazo) {
         this.monto = monto;
@@ -77,40 +116,77 @@ class Credito {
     }
 }
 
-const arrayCreditos = [];
+// Función asincrónica para enviar los datos del préstamo
+async function enviarDatosPrestamo(prestamoDatos) {
+    try {
+        const response = await fetch('http://localhost:3000/prestamos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(prestamoDatos)
+        });
 
+        if (!response.ok) throw new Error('Error en la respuesta del servidor');
+        
+        const data = await response.json();
+        document.getElementById('monto-final').innerHTML = "$" + data.cuota;
+        document.getElementById('descripcion-calculo').innerHTML = `Monto: $${data.monto}, Plazo: ${data.plazo}`;
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: `Error: ${error.message}`,
+        });
+    }
+}
+
+// Al enviar el formulario de la calculadora
 calculadora.addEventListener("submit", (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
 
     const monto = parseFloat(montoUsuario.value.trim());
     const anios = parseInt(aniosUsuario.value.trim());
     const periodo = periodoUsuario.value.trim();
 
-    if (!monto || !anios || !periodo) {
-        alert("Por favor, completa todos los campos antes de continuar.");
+    // Validar entrada de datos
+    if (isNaN(monto) || monto <= 0 || anios <= 0 || !periodo) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Por favor, ingrese valores válidos",
+            footer: '<a href="#">Completa todos los datos!</a>'
+        });
         return;
     }
 
     const plazo = anios * frecuencia(periodo);
-
     const prestamo = new Credito(monto, plazo);
-    // const creditoJSON = JSON.stringify(prestamo);
-    if (prestamo.cuotaPagar() !== 0) {
-        // Convertir el objeto `prestamo` a JSON
-        localStorage.setItem("Prestamo", JSON.stringify(prestamo));
-        const creditoJSON = JSON.stringify(Math.round(prestamo.cuotaPagar()));
-        // Almacenar el JSON en `localStorage`
-        localStorage.setItem("Credito", creditoJSON);
-    } else {
-        alert("Simulación interrumpida")};
 
-    document.getElementById('monto-final').innerHTML = "$" + localStorage.getItem("Credito");
-    document.getElementById('descripcion-calculo').innerHTML = "A partir de los siguientes datos: " + localStorage.getItem("Prestamo");
+    if (prestamo.cuotaPagar() !== 0) {
+        const prestamoDatos = {
+            monto: monto,
+            plazo: plazo,
+            cuota: Math.round(prestamo.cuotaPagar())
+        };
+
+        // Enviar los datos del préstamo al servidor
+        enviarDatosPrestamo(prestamoDatos);
+    } else {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Algo salió mal, no se pudo calcular la cuota",
+            footer: '<a href="#">No se calculó la cuota</a>'
+        });
+    }
 });
 
+// Mostrar la fecha actual en el footer
 const hoy = new Date();
 document.getElementById('footer').innerHTML = hoy.toDateString();
 
-// arrayCreditos.forEach((credito) => { 
-//     console.log("La cuota de " + credito.nombre + " a pagar es de: $"+ Math.round(credito.cuotaPagar()) + " mensuales")});
+
+
+
 

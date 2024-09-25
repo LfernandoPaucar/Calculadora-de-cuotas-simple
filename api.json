@@ -1,0 +1,87 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Juan",
+      "apellidos": "Pérez",
+      "email": "juan.perez@email.com",
+      "dni": "12345678"
+    },
+    {
+      "id": 2,
+      "nombre": "María",
+      "apellidos": "Gómez",
+      "email": "maria.gomez@email.com",
+      "dni": "87654321"
+    },
+    {
+      "id": 3,
+      "nombre": "Carlos",
+      "apellidos": "Lopez",
+      "email": "carlos.lopez@email.com",
+      "dni": "45678912"
+    },
+    {
+      "id": "da75",
+      "nombre": "Juan",
+      "apellidos": "Paucar",
+      "email": "lfernandopaucar28@gmail.com",
+      "dni": "75529781"
+    },
+    {
+      "id": "3b65",
+      "nombre": "Juan",
+      "apellidos": "Paucar",
+      "email": "mari.flo@gmail.com",
+      "dni": "75529781"
+    },
+    {
+      "id": "1dc5",
+      "nombre": "Sebastian Alfred",
+      "apellidos": "Maracay Ponte",
+      "email": "machis.ol@mail.com",
+      "dni": "23456718"
+    },
+    {
+      "id": "02f6",
+      "nombre": "Juan",
+      "apellidos": "Paucar",
+      "email": "lfernandopaucar28@gmail.com",
+      "dni": "75529781"
+    }
+  ],
+  "tasasDeInteres": [
+    {
+      "rangoMonto": "100-1500",
+      "tasaMensual": 0.045
+    },
+    {
+      "rangoMonto": "1501-3000",
+      "tasaMensual": 0.035
+    },
+    {
+      "rangoMonto": "3001-5000",
+      "tasaMensual": 0.025
+    }
+  ],
+  "prestamos": [
+    {
+      "usuarioId": 1,
+      "monto": 1000,
+      "plazo": 12,
+      "cuotaMensual": 87.45
+    },
+    {
+      "usuarioId": 2,
+      "monto": 2500,
+      "plazo": 24,
+      "cuotaMensual": 110.25
+    },
+    {
+      "usuarioId": 3,
+      "monto": 4500,
+      "plazo": 36,
+      "cuotaMensual": 175.65
+    }
+  ]
+}

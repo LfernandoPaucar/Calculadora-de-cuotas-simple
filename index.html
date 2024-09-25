@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Calculadora de cuotas</title>
 </head>
 
@@ -14,39 +16,46 @@
             <a href="./index.html"><img src="./source/logo-removebg-preview.png" alt="logo"></a>
         </div>
     </header>
-    <main>
-        <h1>Calculadora de creditos</h1>
 
+    <main>
+        <h1>Calculadora de créditos</h1>
         <p>Bienvenido a este simulador interactivo</p>
         <div id="apartadoCalculadora">
+            <!-- Formulario de usuario -->
             <section class="container-1">
                 <form action="" id="formulario">
-                    <input type="text" name="nombres" id="nombres" placeholder="Ingrese su nombre">
-                    <input type="text" name="apelidos" id="apellidos" placeholder="Ingrese su apellidos">
-                    <input type="text" name="DNI" id="DNI" placeholder="Igrese su identificacion">
-                    <input type="email" name="correo" id="correo" placeholder="Igrese su correo">
+                    <input type="text" name="nombres" id="nombres" placeholder="Ingrese su nombre" required>
+                    <input type="text" name="apellidos" id="apellidos" placeholder="Ingrese sus apellidos" required>
+                    <input type="text" name="DNI" id="DNI" placeholder="Ingrese su identificación" required>
+                    <input type="email" name="correo" id="correo" placeholder="Ingrese su correo" required>
                     <div class="container-button">
-                        <input type="submit" value="send" class="boton">
+                        <input type="submit" value="Enviar" class="boton">
                     </div>
                     <div class="hijo-terminos">
-                        <label for="terminos-y-condiciones">Acepto el tratamiento de mis datos</label>
                         <input type="checkbox" id="opcion1" name="terminos" required>
+                        <label for="opcion1">Acepto el tratamiento de mis datos</label>
                     </div>
-                    
                 </form>
             </section>
-            <section class="container-2">
-                <form action="" id="calculadora">
-                    <label for="">Ingrese su monto</label>
-                    <input type="number" name="monto" id="monto">
-                    <label for="">Ingrese el numero de años por el  cual desea el prestamo</label>
-                    <input type="number" name="anios" id="anios">
-                    <label for="">Ingrese el periodo</label>
-                    <input type="text" name="periodo" id="periodo">
+
+            <!-- Calculadora de cuotas -->
+            <section class="container-2" style="display: none;" id="calculadora" data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom">
+                <form action="">
+                    <label for="monto">Ingrese su monto</label>
+                    <input type="number" name="monto" id="monto" placeholder="Monto" required>
+
+                    <label for="anios">Ingrese el número de años por el cual desea el préstamo</label>
+                    <input type="number" name="anios" id="anios" placeholder="Años" required>
+
+                    <label for="periodo">Ingrese el periodo (mensual, trimestral, etc.)</label>
+                    <input type="text" name="periodo" id="periodo" placeholder="Periodo" required>
+
                     <div class="button-calculadora">
-                    <label for="">¡Calcular cuota!</label>
-                    <input type="submit" value="send" class="boton">
+                        <input type="submit" value="Calcular cuota" class="boton">
                     </div>
+
+                    <!-- Resultado del cálculo -->
                     <section class="container-3">
                         <div id="hijoContainer3">
                             <h3>Su cuota es de: <span id="monto-final"></span></h3>
@@ -55,14 +64,18 @@
                     </section>
                 </form>
             </section>
-            
         </div>
     </main>
+
     <footer id="footer">
         <h2>Todos los derechos reservados</h2>
-
     </footer>
+
     <script src="/js/index.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </body>
 
 </html>
